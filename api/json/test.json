@@ -1,0 +1,35 @@
+[
+    {
+        "name": "Vitor",
+        "age": 24,
+        "is_studying": true,
+        "study_details": {
+            "program_language": [
+                "JavaScript",
+                "TypeScript"
+            ],
+            "looking_for_job": true
+        },
+        "hobbies": [
+            "Programar",
+            "Assistir",
+            "Ler"
+        ]
+    },
+    {
+        "name": "Laura",
+        "age": 21,
+        "is_working": true,
+        "working_details": {
+            "occupation": "teacher",
+            "enterprise": "public school"
+        },
+        "is_studying": false,
+        "looking_for_job": true,
+        "hobbies": [
+            "Animes",
+            "Series",
+            "Ler"
+        ]
+    }
+]

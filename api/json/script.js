@@ -36,5 +36,8 @@ const objData = JSON.parse(jsonData);
 console.log(objData);
 console.log(typeof objData);
 
+objData.map((user) => console.log(user.name));
 
-objData.map(user => console.log(user.name))
+const userStuding = objData.filter((user) => user.hobbies);
+
+console.log(userStuding);

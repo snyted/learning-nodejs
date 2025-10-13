@@ -1,9 +1,28 @@
 const http = require("http");
+const fs = require("fs");
 
-const vehicles = [
-  { marca: "Toyota", modelo: "Corolla", ano: 2020 },
-  { marca: "Honda", modelo: "Civic", ano: 2021 },
-];
+const FILENAME = "vehicles.json";
+
+let vehicles = [];
+
+if (fs.existsSync(FILENAME)) {
+  const data = fs.readFileSync(FILENAME, "utf8");
+  vehicles = JSON.parse(data);
+} else {
+  vehicles = [
+    { marca: "Toyota", modelo: "Corolla", ano: 2020 },
+    { marca: "Honda", modelo: "Civic", ano: 2021 },
+  ];
+}
+
+function saveVehicles() {
+  try {
+    const jsonString = JSON.stringify(vehicles, null, 2);
+    fs.writeFileSync(FILENAME, jsonString, "utf8");
+  } catch (err) {
+    console.error("Erro ao salvar dados no disco:", err);
+  }
+}
 
 const server = http.createServer((req, res) => {
   // Lógica GET
@@ -32,11 +51,7 @@ const server = http.createServer((req, res) => {
   if (req.method === "POST" && req.url === "/veiculos") {
     let body = "";
 
-    req.on("data", (chunk) => {
-      console.log("Chunk:", chunk);
-      body += chunk.toString();
-      console.log("novo veiculo (string): ", body);
-    });
+    req.on("data", (chunk) => (body += chunk.toString()));
 
     req.on("end", () => {
       try {
@@ -58,7 +73,7 @@ const server = http.createServer((req, res) => {
 
         // Fazendo um push após validações
         vehicles.push(newVehicle);
-
+        saveVehicles();
         // Respondendo o cliente
         res.writeHead(201, { "Content-Type": "application/json" });
         res.end(JSON.stringify(newVehicle), () => {
@@ -70,6 +85,54 @@ const server = http.createServer((req, res) => {
         res.end("JSON inválido no corpo da requisição.");
       }
     });
+    return;
+  }
+
+  //   Logica PUT
+  if (req.method === "PUT" && req.url.startsWith("/veiculos/")) {
+    const id = Number(req.url.split("/")[2]);
+    const i = id - 1;
+    let body = "";
+    req.on("data", (chunk) => (body += chunk.toString()));
+
+    req.on("end", () => {
+      try {
+        const updatedData = JSON.parse(body);
+
+        vehicles[i] = updatedData;
+
+        saveVehicles();
+
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify(updatedData));
+      } catch (error) {
+        console.error("Erro na atualização/PUT", error);
+        res.writeHead(400, { "Content-Type": "text/plain" });
+        res.end("JSON inválido ou dados malformados.");
+      }
+    });
+    return;
+  }
+
+  //   Lógica DELETE
+  if (req.method === "DELETE" && req.url.startsWith("/veiculos/")) {
+    const id = Number(req.url.split("/")[2]);
+    const i = id - 1;
+    
+    if (vehicles[i]) {
+      try {
+        vehicles.splice(i, 1);
+        saveVehicles();
+
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end("Veiculo deletado.");
+      } catch (error) {
+        console.error("Erro na remoção/DELETE do veículo", error);
+        res.writeHead(400, { "Content-Type": "text/plain" });
+        res.end("Não foi possível deletar. Verifique a rota e o id.");
+      }
+    }
+
     return;
   }
 

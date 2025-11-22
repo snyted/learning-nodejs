@@ -2,26 +2,16 @@ const express = require("express");
 
 const app = express();
 const PORT = 3000;
+const fs = require("fs").promises;
 
-const logMiddleware = (req, res, next) => {
-  // 1. Ação: Registra a URL e o método
-  console.log(
-    `[LOG] ${req.method} na rota: ${
-      req.url
-    } - ${new Date().toLocaleTimeString()}`
-  );
+const filePath = "vehicles.json";
 
-  // 2. Chama next() para prosseguir para a próxima função (ou rota)
-  next();
-};
-
-app.use(express.json());
-app.use(logMiddleware);
-
-let vehicles = [
-  { id: 1, marca: "Toyota", modelo: "Corolla", ano: 2020 },
+const vehicles = [
+  { id: 1, marca: "Toyota", modelo: "Corolla", ano: 2022 },
   { id: 2, marca: "Honda", modelo: "Civic", ano: 2021 },
 ];
+
+app.use(express.json());
 
 app.get("/veiculos", (req, res) => {
   res.status(200).json(vehicles);

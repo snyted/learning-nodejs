@@ -5,11 +5,11 @@ class Pessoa {
     }
 
     apresentar() {
-        console.log(`Olá meu nome é ${this.nome} e tenho ${this.idade} anos`)
+        return `Olá meu nome é ${this.nome} e tenho ${this.idade} anos`
     }
 }
 
 let pessoa1 = new Pessoa('Vitor', 25);
 let pessoa2 = new Pessoa('Laura', 22);
 
-pessoa1.apresentar()
+console.log(pessoa1.apresentar())

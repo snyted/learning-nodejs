@@ -1,10 +1,9 @@
-class Pessoa {
-    constructor(nome, idade) {
-        this.nome = nome;
-        this.idade = idade
+import type { IPessoa } from './ex-01.js';
+class Pessoa implements IPessoa {
+    constructor(public nome: string, public idade: number) {
     }
 
-    apresentar() {
+    apresentar(): string  {
         return `Olá meu nome é ${this.nome} e tenho ${this.idade} anos`
     }
 }

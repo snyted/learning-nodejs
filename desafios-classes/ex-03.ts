@@ -1,5 +1,10 @@
-class ContaBancaria {
-    constructor(public titular: string, public saldo?: number) {
+export interface IContaBancaria {
+    titular: string,
+    saldo: number,
+}
+
+class ContaBancaria implements IContaBancaria {
+    constructor(public titular: string, public saldo: number = 0) {
     }
 }
 

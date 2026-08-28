@@ -2,7 +2,6 @@ import { z } from "zod"
 
 // 01
 const usernameSchema = z.string().min(3).max(20)
-console.log(usernameSchema.parse('vitor'))
 
 
 // 02
@@ -19,9 +18,7 @@ const user = {
 }
 
 
-const { success, error } = userSchema.safeParse(user)
-
-console.log(success, error?.message[0])
+// const { success, error } = userSchema.safeParse(user)
 
 // 03
 
@@ -49,8 +46,6 @@ const cart = {
     ]
 }
 
-console.log(cartSchema.safeParse(cart))
-
 const cart02 = {
     clientId: crypto.randomUUID(),
     products: [
@@ -63,4 +58,19 @@ const cart02 = {
     ]
 }
 
-console.log("Schema Cart 02: ", cartSchema.safeParse(cart02).error?.message)
+
+// 04
+
+const user02Schema = z.object({
+    name: z.string().min(2),
+    workDays: z.array(z.string().transform(day => day.slice(0, 3).toLowerCase()))
+})
+
+const user02 = {
+    name: "Er",
+    workDays: ["SegunDa", "Terça", "QuaRta", "QUINTA", "SexTA"]
+}
+
+const { success, data } = user02Schema.safeParse(user02)
+
+console.log(data)
